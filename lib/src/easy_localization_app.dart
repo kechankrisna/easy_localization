@@ -127,6 +127,10 @@ class EasyLocalization extends StatefulWidget {
   /// @Default value `errorWidget = ErrorWidget()`
   final Widget Function(FlutterError? message)? errorWidget;
 
+  /// Callback for handling missing localization keys.
+  /// You can use this to log missing keys or provide a default value.
+  static Function(String key)? onMissingKeyResolve;
+
   EasyLocalization({
     Key? key,
     required this.child,

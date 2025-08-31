@@ -10,6 +10,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  EasyLocalization.onMissingKeyResolve = (String key) {
+    // Handle missing key, e.g., log it or send to analytics
+    print('Missing localization key: $key');
+  };
   runApp(EasyLocalization(
     supportedLocales: [
       Locale('en', 'US'),

@@ -205,6 +205,7 @@ class Localization {
     if (resource == null ||
         (_useFallbackTranslationsForEmptyResources && resource.isEmpty)) {
       if (logging) {
+        EasyLocalization.onMissingKeyResolve?.call(key);
         EasyLocalization.logger.warning('Localization key [$key] not found');
       }
       if (_fallbackTranslations == null || !fallback) {

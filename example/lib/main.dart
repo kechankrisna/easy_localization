@@ -160,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: 20,
             ),
+            Text("should translate: ${LocaleKeys.amount.tr()}"),
             ElevatedButton(
               onPressed: () {
                 context.resetLocale();

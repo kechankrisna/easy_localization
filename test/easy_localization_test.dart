@@ -723,6 +723,20 @@ void main() {
         test('plural', () {
           expect(plural('day', 0), '0 days');
         });
+
+        test('tr() on a plural-block key returns key name without throwing', () {
+          // 'hat' maps to a Map (plural block), not a String.
+          // Calling tr() must not throw a TypeError; it falls back to the key.
+          expect(() => tr('hat'), returnsNormally);
+          expect(tr('hat'), 'hat');
+        });
+
+        test('trExists() returns false for plural-block key, true for nested path', () {
+          // The plain key resolves to a Map, so no string value exists.
+          expect(trExists('hat'), isFalse);
+          // But the sub-key path resolves to an actual String.
+          expect(trExists('hat.one'), isTrue);
+        });
       });
     });
   });

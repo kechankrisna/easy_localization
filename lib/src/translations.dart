@@ -13,7 +13,8 @@ class Translations {
 
     /// If we failed to find the key as a nested key, then fall back
     /// to looking it up like normal.
-    returnValue ??= _translations?[key];
+    final raw = _translations?[key];
+    returnValue ??= raw is String ? raw : null;
 
     return returnValue;
   }
@@ -26,19 +27,18 @@ class Translations {
 
     var value = _translations![kHead];
 
-    // print(value);
-
     for (var i = 1; i < keys.length; i++) {
       if (value is Map<String, dynamic>) value = value[keys[i]];
     }
 
-    /// If we found the value, cache it. If the value is null then
-    /// we're not going to cache it, and returning null instead.
-    if (value != null) {
+    /// Only cache and return if the resolved value is actually a String.
+    /// A Map means the key points to a plural/gender block, not a plain string.
+    if (value is String) {
       cacheNestedKey(key, value);
+      return value;
     }
 
-    return value;
+    return null;
   }
 
   // bool has(String key) => isNestedKey(key)

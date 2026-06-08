@@ -130,6 +130,15 @@ class EasyLocalization extends StatefulWidget {
   /// You can use this to log missing keys or provide a default value.
   static Function(String key)? onMissingKeyResolve;
 
+  /// Accumulates every translation key that was not found at runtime.
+  /// Keys are added automatically — no setup required.
+  /// Inspect this set during development or tests to surface gaps.
+  /// Call [resetMissingKeys] to clear it between sessions or test runs.
+  static final Set<String> missingKeys = {};
+
+  /// Clears the [missingKeys] set.
+  static void resetMissingKeys() => missingKeys.clear();
+
   EasyLocalization({
     Key? key,
     required this.child,

@@ -739,5 +739,61 @@ void main() {
         });
       });
     });
+
+    group('missingKeys', () {
+      setUp(() {
+        EasyLocalization.resetMissingKeys();
+        // Use r1 (en locale, no fallback) so missingKeys behaviour is isolated.
+        Localization.load(const Locale('en'), translations: r1.translations);
+      });
+
+      test('starts empty after resetMissingKeys()', () {
+        expect(EasyLocalization.missingKeys, isEmpty);
+      });
+
+      test('tr() on a missing key adds it to missingKeys', overridePrint(() {
+        tr('nonexistent_key');
+        expect(EasyLocalization.missingKeys, contains('nonexistent_key'));
+      }));
+
+      test('tr() on a found key does NOT add it to missingKeys', () {
+        tr('test'); // 'test' exists in r1 translations
+        expect(EasyLocalization.missingKeys, isNot(contains('test')));
+      });
+
+      test('missingKeys deduplicates repeated missing calls', overridePrint(() {
+        tr('dup_key');
+        tr('dup_key');
+        tr('dup_key');
+        // Set semantics: only one entry regardless of call count.
+        expect(EasyLocalization.missingKeys.where((k) => k == 'dup_key').length, 1);
+      }));
+
+      test('accumulates multiple distinct missing keys', overridePrint(() {
+        tr('missing_a');
+        tr('missing_b');
+        tr('missing_c');
+        expect(EasyLocalization.missingKeys,
+            containsAll(['missing_a', 'missing_b', 'missing_c']));
+      }));
+
+      test('plural() on a completely missing key adds the .other sub-key', overridePrint(() {
+        // _resolvePlural silences the first attempt (logging:false) and falls
+        // back to key.other with logging enabled — so that sub-key is collected.
+        plural('totally_missing_plural', 1);
+        expect(EasyLocalization.missingKeys, contains('totally_missing_plural.other'));
+        // The silenced first attempt key is NOT in the set.
+        expect(EasyLocalization.missingKeys,
+            isNot(contains('totally_missing_plural.one')));
+      }));
+
+      test('resetMissingKeys() clears all accumulated keys', overridePrint(() {
+        tr('missing_x');
+        tr('missing_y');
+        expect(EasyLocalization.missingKeys, isNotEmpty);
+        EasyLocalization.resetMissingKeys();
+        expect(EasyLocalization.missingKeys, isEmpty);
+      }));
+    });
   });
 }

@@ -82,7 +82,7 @@ class CodegenLoader extends AssetLoader {
       "female": " مرحبا بك يا فتاة",
       "with_arg": {"male": "{} مرحبا يا رجل", "female": "{} مرحبا بك يا فتاة"}
     },
-    "reset_locale": "إعادة ضبط اللغة"
+    "reset_locale": "إعادة ضبط اللغة",
   };
   static const Map<String, dynamic> de_DE = {
     "title": "Hallo",
